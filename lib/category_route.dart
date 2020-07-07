@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:unit_converter/category.dart';
 
-final _rowHeight = 100.0;
-final _borderRadius = BorderRadius.circular(_rowHeight / 2);
-const _categoryIcon = Icons.cake;
+import 'package:unit_converter/category.dart';
+import 'package:unit_converter/unit.dart';
+
+final _backgroundColor = Colors.green[100];
 
 class CategoryRoute extends StatelessWidget {
   const CategoryRoute();
@@ -30,61 +30,56 @@ class CategoryRoute extends StatelessWidget {
     Colors.red,
   ];
 
+  Widget _buildCategoryWidgets(List<Widget> categories) {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) => categories[index],
+      itemCount: categories.length,
+    );
+  }
+
+  List<Unit> _retrieveUnitList(String categoryName) {
+    return List.generate(10, (int i) {
+      i += 1;
+      return Unit(
+        name: '$categoryName Unit $i',
+        conversion: i.toDouble(),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final listView = ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: _categoryNames.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Material(
-          color: Colors.transparent,
-          child: Container(
-            height: _rowHeight,
-            child: InkWell(
-              borderRadius: _borderRadius,
-              highlightColor: _baseColors[index],
-              splashColor: _baseColors[index],
-              onTap: () {
-                print('I was tapped!');
-              },
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Icon(
-                        _categoryIcon,
-                        size: 60.0,
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        _categoryNames[index],
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+    final categories = <Category>[];
+
+    for (var i = 0; i < _categoryNames.length; i++) {
+      categories.add(Category(
+        name: _categoryNames[i],
+        color: _baseColors[i],
+        iconLocation: Icons.cake,
+        units: _retrieveUnitList(_categoryNames[i]),
+      ));
+    }
+
+    final listView = Container(
+      color: _backgroundColor,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: _buildCategoryWidgets(categories),
     );
 
     final appBar = AppBar(
+      elevation: 0.0,
       title: Text(
         'Unit Converter',
-        style: TextStyle(fontSize: 24.0, color: Colors.black),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 30.0,
+        ),
       ),
-      backgroundColor: Colors.green[100],
       centerTitle: true,
+      backgroundColor: _backgroundColor,
     );
 
     return Scaffold(
-      backgroundColor: Colors.green[100],
       appBar: appBar,
       body: listView,
     );
