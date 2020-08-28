@@ -42,11 +42,13 @@ class Category extends StatelessWidget {
             color: color,
             units: units,
           ),
+          resizeToAvoidBottomPadding: false,
         );
       },
     ));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
