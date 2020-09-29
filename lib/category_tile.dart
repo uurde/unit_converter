@@ -6,7 +6,6 @@ import 'category.dart';
 const _rowHeight = 100.0;
 final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
-/// A [CategoryTile] to display a [Category].
 class CategoryTile extends StatelessWidget {
   final Category category;
   final ValueChanged<Category> onTap;
