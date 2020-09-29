@@ -44,10 +44,7 @@ class Api {
       if (httpResponse.statusCode != HttpStatus.OK) {
         return null;
       }
-      // The response is sent as a Stream of bytes that we need to convert to a
-      // `String`.
       final responseBody = await httpResponse.transform(utf8.decoder).join();
-      // Finally, the string is parsed into a JSON object.
       return json.decode(responseBody);
     } on Exception catch (e) {
       print('$e');
