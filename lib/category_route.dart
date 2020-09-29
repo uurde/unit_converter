@@ -58,6 +58,17 @@ class _CategoryRouteState extends State<CategoryRoute> {
     }),
   ];
 
+  static const _icons = <String>[
+    'assets/icons/length.png',
+    'assets/icons/area.png',
+    'assets/icons/volume.png',
+    'assets/icons/mass.png',
+    'assets/icons/time.png',
+    'assets/icons/digital_storage.png',
+    'assets/icons/power.png',
+    'assets/icons/currency.png',
+  ];
+
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -68,7 +79,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
 
   Future<void> _retrieveLocalCategories() async {
     final json = DefaultAssetBundle.of(context)
-        .loadString('assets/data/goofy_units.json');
+        .loadString('assets/data/regular_units.json');
     final data = JsonDecoder().convert(await json);
     if (data is! Map) {
       throw ('Data retrieved from API is not a Map');
@@ -82,7 +93,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
         name: key,
         units: units,
         color: _baseColors[categoryIndex],
-        iconLocation: Icons.cake,
+        iconLocation: _icons[categoryIndex],
       );
       setState(() {
         if (categoryIndex == 0) {
