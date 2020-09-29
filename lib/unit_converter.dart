@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'api.dart';
 import 'category.dart';
 import 'unit.dart';
 
@@ -30,11 +33,11 @@ class _UnitConverterState extends State<UnitConverter> {
     _createDropdownMenuItems();
     _setDefaults();
   }
-  
+
   @override
-  void didUpdateWidget(UnitConverter old){
+  void didUpdateWidget(UnitConverter old) {
     super.didUpdateWidget(old);
-    if(old.category != widget.category){
+    if (old.category != widget.category) {
       _createDropdownMenuItems();
       _setDefaults();
     }
@@ -80,11 +83,22 @@ class _UnitConverterState extends State<UnitConverter> {
     return outputNum;
   }
 
-  void _updateConversion() {
-    setState(() {
-      _convertedValue =
-          _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
-    });
+  void _updateConversion() async {
+    if (widget.category.name == apiCategory['name']) {
+      final api = Api();
+      final conversion = await api.convert(apiCategory['route'],
+          _inputValue.toString(), _fromValue.name, _toValue.name);
+
+      setState(() {
+        _convertedValue = _format(conversion);
+      });
+    } else {
+      // For the static units, we do the conversion ourselves
+      setState(() {
+        _convertedValue = _format(
+            _inputValue * (_toValue.conversion / _fromValue.conversion));
+      });
+    }
   }
 
   void _updateInputValue(String input) {
@@ -145,8 +159,8 @@ class _UnitConverterState extends State<UnitConverter> {
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: Theme(
         data: Theme.of(context).copyWith(
-              canvasColor: Colors.grey[50],
-            ),
+          canvasColor: Colors.grey[50],
+        ),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             alignedDropdown: true,
